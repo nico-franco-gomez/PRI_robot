@@ -15,6 +15,7 @@ class Parcours:
     object_lims = None
     object_max = None
     security_factor = 1
+    last_point_coord = None # For checking the path between last two points
 
     # Movement of the axes
     turn = int('110010',base=2) # 6-bit binary in int representation
@@ -38,6 +39,9 @@ class Parcours:
     def set_turn_status(self,param:dict):
         self.turn = param['t']
         self.status = param['s']
+
+    def __update_last_point(self,coord):
+        self.last_point_coord = coord
 
     def __init__(self,name=time_string,tool = '[4]:Microflown3D', velocity=100, base='[0]'):
         # Initiate .dat and .src files as list of strings
@@ -132,6 +136,9 @@ class Parcours:
 
         if self.object_lims is not None:
             self._check_object_lims(coord)
+            if self.last_point_coord is not None and self._check_path(coord):
+                print(f'''Warning! The linear path crosses the object limits.
+                Point no.: {self.__counter_points}''')
 
         assert velocity > 0 and velocity <= 100,\
             'Velocity for SPTP cannot be out 0-100%'
@@ -208,10 +215,15 @@ class Parcours:
     
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
+        self.__update_last_point(coord)
 
     def add_point_SLIN(self,coord,rot,velocity=2):
         if self.object_lims is not None:
             self._check_object_lims(coord)
+            if self.last_point_coord is not None:
+                assert(self._check_path(coord)),\
+                    f'''The linear path crosses the object limits.
+                    Point no.: {self.__counter_points}'''
 
         assert velocity > 0 and velocity <= 2,\
             'Velocity for SLIN cannot be out 0-2 m/s'
@@ -294,6 +306,7 @@ class Parcours:
         
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
+        self.__update_last_point(coord)
 
     def add_point_SCIRC(self,coord_mid,rot_mid,coord,rot,velocity=2):
         if self.object_lims is not None:
@@ -402,6 +415,7 @@ class Parcours:
 
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
+        self.__update_last_point(coord)
 
     def __add2files(self,src:list,dat:list):
         '''Inside function to append commands to files'''
@@ -452,7 +466,7 @@ class Parcours:
             self.object_max+=(i[0]-i[1])**2
         self.object_max = self.object_max**0.5
 
-    def _check_object_lims(self,coord):
+    def _check_object_lims(self,coord,security_check=True):
         '''checks if point is within the limits of the object
         and also if it's nearer than the security distance.
         sec is the security factor'''
@@ -463,13 +477,33 @@ class Parcours:
         assert (not all(cond)),\
                 f'''Given point is inside the object limits.
                 Point no.: {self.__counter_points}'''
-        if not self.__trust:
+        if not self.__trust and security_check:
                 assert np.dot(coord,coord)**0.5 > \
                 self.object_max*self.security_factor,\
                     f'''The point is too close to object.
                     Point no.: {self.__counter_points}
                     Min distance: {self.object_max*self.security_factor}
                     Point distance: {np.dot(coord,coord)**0.5}'''
+
+    def _check_path(self,coord,accuracy=300):
+        '''checks the linear path between the last saved point and a given one.
+        It will return False for a linear path that crosses the object limits.
+        Accuracy parameter defines how many discrete points are evaluated 
+        in between.'''
+        temp = self.last_point_coord
+        path_points = np.vstack([ np.linspace(temp[0],coord[0],accuracy),
+                                 np.linspace(temp[1],coord[1],accuracy),
+                                 np.linspace(temp[2],coord[2],accuracy)]).T
+        for n in path_points:
+            cond = []
+            for i in range(3):
+                cond.append(n[i]<self.object_lims[i][1] and \
+                    n[i]>self.object_lims[i][0])
+            inside = all(cond) # True when point is inside, False when not
+            if inside:
+                break
+        return not inside # returns False for a bad path
+
 
     def export(self,path='./'):
         # Last fixes
