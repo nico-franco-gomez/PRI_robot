@@ -19,10 +19,10 @@ points = []
 # Rotation handling – only y-axis (B)
 ## This is defined for Microflown3D and base2: straight_sol !
 deltaB_rot = 90/r
-rotB = lambda x: -90 - x * deltaB_rot
+rotB = lambda x: -90 + x * deltaB_rot
 
 # Second security point
-par.add_point_SLIN([0,r,800],[0,rotB(-350),180],2)
+par.add_point_SLIN([0,r,800],[0,rotB(350),180],2)
 
 # Define points
 

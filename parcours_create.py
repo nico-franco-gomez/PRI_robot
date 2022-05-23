@@ -477,7 +477,7 @@ class Parcours:
         assert (not all(cond)),\
                 f'''Given point is inside the object limits.
                 Point no.: {self.__counter_points}'''
-        if not self.__trust and security_check:
+        if (not self.__trust) and security_check:
                 assert np.dot(coord,coord)**0.5 > \
                 self.object_max*self.security_factor,\
                     f'''The point is too close to object.
@@ -506,6 +506,9 @@ class Parcours:
 
     def get_counter_points(self):
         return self.__counter_points
+
+    def set_trust(self,mode:bool):
+        self.__trust = mode
 
     def export(self,path='./'):
         # Last fixes
