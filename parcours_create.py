@@ -504,6 +504,8 @@ class Parcours:
                 break
         return not inside # returns False for a bad path
 
+    def get_counter_points(self):
+        return self.__counter_points
 
     def export(self,path='./'):
         # Last fixes
