@@ -6,6 +6,8 @@ KUKA KR10 R1420.
 '''
 import time
 import numpy as np
+from scipy.io import savemat
+
 named_tuple = time.localtime()
 time_string = time.strftime("parcour-time%H_%M_%S-date%m_%d_%Y", named_tuple)
 
@@ -16,6 +18,10 @@ class Parcours:
     object_max = None
     security_factor = 1
     last_point_coord = None # For checking the path between last two points
+    _points = [] # Every point's coordinate with [x,y,z,A,B,C]
+
+    def get_points(self):
+        return self._points
 
     # Movement of the axes
     turn = int('110010',base=2) # 6-bit binary in int representation
@@ -216,6 +222,8 @@ class Parcours:
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
         self.__update_last_point(coord)
+        self._points.append([coord[0],coord[1],coord[2],
+                            rot[0],rot[1],rot[2]])
 
     def add_point_SLIN(self,coord,rot,velocity=2):
         if self.object_lims is not None:
@@ -307,6 +315,8 @@ class Parcours:
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
         self.__update_last_point(coord)
+        self._points.append([coord[0],coord[1],coord[2],
+                            rot[0],rot[1],rot[2]])
 
     def add_point_SCIRC(self,coord_mid,rot_mid,coord,rot,velocity=2):
         if self.object_lims is not None:
@@ -416,6 +426,8 @@ class Parcours:
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
         self.__update_last_point(coord)
+        self._points.append([coord[0],coord[1],coord[2],
+                            rot[0],rot[1],rot[2]])
 
     def __add2files(self,src:list,dat:list):
         '''Inside function to append commands to files'''
@@ -510,7 +522,7 @@ class Parcours:
     def set_trust(self,mode:bool):
         self.__trust = mode
 
-    def export(self,path='./'):
+    def export(self,path='./',save_points=True):
         # Last fixes
         self.dat_file[1] = self.dat_file[1].replace('insertPointNumber',
                                                     str(self.__counter_points-1))
@@ -549,6 +561,12 @@ class Parcours:
         with open(path+self.name+'.src', 'w') as file:
             file.write('\n'.join(self.src_file))
 
+        if save_points:
+            dictio = {f'{ind}':n for ind,n in enumerate(self._points)}
+            dictio['README'] = '''Every point number is given as a key
+            and the values are an ordered vector with [x,y,z,A,B,C]'''
+            savemat(path+self.name+'.mat',dictio)
+
         ## Export message
         print(f'''\n\tExported {self.name}.SRC and -.DAT Files
         –––––––––––––––––––––––––––––––––––––––
@@ -556,36 +574,3 @@ class Parcours:
         Base: {self.base}
         No. of points: {self.__counter_points-1}
         Trust mode: {self.__trust}\n''')
-
-
-def test_export():
-    par = Parcours(name='small_test',base='[1]:point_sol')
-
-    rota = [0,0,0]
-    c = [0,0,1000]
-    par.add_point_SPTP(c,rota)
-
-    # c = [1139.51880,-50.9487190,385.007935]
-    # rota = [84.6263885,-57.5163116,90.9969177]
-    # par.add_point_SLIN(c,rota)
-
-    # c1 = [838.869141,-277.480896,609.890198]
-    # c2 = [1091.95776,-277.481,851.570923]
-    # rota = [84.5815048,-57.5670280,91.0787354]
-    # par.add_point_SCIRC(c1,rota,c2,rota,2)
-    par.export()
-
-def test_grid_parcours():
-    par = Parcours()
-    par.set_object_lims([(-183.5,183.5),(-80,80),(0,401)]) # Box
-
-    # Starting points
-    ro = [-90,0,-95]
-    par.add_point_SPTP([0,0,1000],ro,75)
-    par.add_point_SPTP([-250,0,1000],ro,75)
-
-    points = np.meshgrid(np.linspace(-100,100,10),np.linspace(0,800,10))
-
-if __name__ == '__main__':
-    test_export()
-    # print('\n')

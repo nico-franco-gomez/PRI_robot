@@ -1,5 +1,6 @@
 import numpy as np
-from parcours_create import Parcours
+from parcours import Parcours
+from scipy.io import savemat
 
 '''
 This script creates a moving frontal wall of measuring points for an exemplary

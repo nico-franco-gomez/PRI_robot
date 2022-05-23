@@ -1,5 +1,5 @@
 import numpy as np
-from parcours_create import Parcours
+from parcours import Parcours
 
 '''
 This script creates a frontal wall of measuring points for an exemplary
