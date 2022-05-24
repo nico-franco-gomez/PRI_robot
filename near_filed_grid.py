@@ -16,13 +16,13 @@ par.set_object_lims([(-183.5,183.5),(-80,80),(0,400)]) # Box
 
 ## Security points 1
 initial_rot = np.array([0,-90,180])
-par.add_point_SPTP([0,0,800],initial_rot,75)
+par.add_point_SPTP([0,0,800],initial_rot,75,marker=0)
 
 nom_dist = -50-183.5 # nominal distance for plane location
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0,-45,180])
-par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1)
+par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1,marker=0)
 x = nom_dist # Place for the mesh
 yy = np.linspace(-80,80,10)
 zz = np.linspace(0,405,10)
@@ -41,10 +41,9 @@ for n in points:
     eval(f'''par.add_point_{n[2]}(n[0],n[1])''')
 
 ## Security points 2
-par.add_point_SLIN([nom_dist,0,800],rot_frontal,1)
-
+par.add_point_SLIN([nom_dist,0,800],rot_frontal,1,marker=0)
 rot_side1 = np.array([45,-45,180])
-par.add_point_SLIN([0,nom_dist,800],rot_side1,1)
+par.add_point_SLIN([0,nom_dist,800],rot_side1,1,marker=0)
 
 # One side
 xx = np.linspace(0,nom_dist,10) # Place for the mesh
@@ -65,10 +64,9 @@ for n in points:
     eval(f'''par.add_point_{n[2]}(n[0],n[1])''')
 
 ## Security points 3
-par.add_point_SLIN([0,nom_dist,800],initial_rot,1)
-
+par.add_point_SLIN([0,nom_dist,800],initial_rot,1,marker=0)
 rot_side2 = np.array([-45,-45,180])
-par.add_point_SLIN([0,-nom_dist,800],rot_side2,1)
+par.add_point_SLIN([0,-nom_dist,800],rot_side2,1,marker=0)
 
 # Other side
 xx = np.linspace(0,nom_dist,10) # Place for the mesh
@@ -89,9 +87,9 @@ for n in points:
     eval(f'''par.add_point_{n[2]}(n[0],n[1])''')
 
 ## Security points 3
-par.add_point_SLIN([0,-nom_dist,800],rot_side2,1)
+par.add_point_SLIN([0,-nom_dist,800],rot_side2,1,marker=0)
 rot_upper = np.array([0,0,180])
-par.add_point_SLIN([0,0,800],rot_upper,1)
+par.add_point_SLIN([0,0,800],rot_upper,1,marker=0)
 
 # Upper plane
 xx = np.linspace(0,nom_dist,10) # Place for the mesh

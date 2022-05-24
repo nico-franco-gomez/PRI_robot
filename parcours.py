@@ -119,7 +119,7 @@ class Parcours:
             st = st.replace('(((','{').replace(')))','}')
         return st.replace('\n','').replace('  ','')
 
-    def add_point_SPTP(self,coord,rot,velocity=100,param:dict=None):
+    def add_point_SPTP(self,coord,rot,velocity=100,param:dict=None,marker=1):
         '''Adds a new SPTP point to track using coordinates, rotation, velocity
         and, if given, turn and status parameters.
 
@@ -222,10 +222,10 @@ class Parcours:
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
         self.__update_last_point(coord)
-        self._points.append([coord[0],coord[1],coord[2],
-                            rot[0],rot[1],rot[2]])
+        self._points.append((coord[0],coord[1],coord[2],
+                            rot[0],rot[1],rot[2],marker))
 
-    def add_point_SLIN(self,coord,rot,velocity=2):
+    def add_point_SLIN(self,coord,rot,velocity=2,marker=1):
         if self.object_lims is not None:
             self._check_object_lims(coord)
             if self.last_point_coord is not None:
@@ -315,10 +315,10 @@ class Parcours:
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
         self.__update_last_point(coord)
-        self._points.append([coord[0],coord[1],coord[2],
-                            rot[0],rot[1],rot[2]])
+        self._points.append((coord[0],coord[1],coord[2],
+                            rot[0],rot[1],rot[2],marker))
 
-    def add_point_SCIRC(self,coord_mid,rot_mid,coord,rot,velocity=2):
+    def add_point_SCIRC(self,coord_mid,rot_mid,coord,rot,velocity=2,marker=1):
         if self.object_lims is not None:
             self._check_object_lims(coord)
             self._check_object_lims(coord_mid)
@@ -426,8 +426,8 @@ class Parcours:
         ## Add point
         self.__add2files(newPointSRC,newPointDAT)
         self.__update_last_point(coord)
-        self._points.append([coord[0],coord[1],coord[2],
-                            rot[0],rot[1],rot[2]])
+        self._points.append((coord[0],coord[1],coord[2],
+                            rot[0],rot[1],rot[2],marker))
 
     def __add2files(self,src:list,dat:list):
         '''Inside function to append commands to files'''
@@ -564,7 +564,8 @@ class Parcours:
         if save_points:
             dictio = {f'{ind}':n for ind,n in enumerate(self._points)}
             dictio['README'] = '''Every point number is given as a key
-            and the values are an ordered vector with [x,y,z,A,B,C]'''
+            and the values are an ordered vector with [x,y,z,A,B,C,marker].
+            The marker is 1 for normal points and 0 for security points.'''
             savemat(path+self.name+'.mat',dictio)
 
         ## Export message

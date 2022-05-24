@@ -17,13 +17,13 @@ par.set_object_lims([(-183.5,183.5),(-80,80),(0,400)]) # Box
 
 ## Security points 1
 initial_rot = np.array([0,-90,180])
-par.add_point_SPTP([0,0,800],initial_rot,75)
+par.add_point_SPTP([0,0,800],initial_rot,75,marker=0)
 
 nom_dist = -40-183.5 # nominal distance for plane location
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0,-45,180])
-par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1)
+par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1,marker=0)
 
 distances = np.arange(nom_dist,nom_dist-501,-100)
 
@@ -47,7 +47,7 @@ for x in distances:
         eval(f'''par.add_point_{n[2]}(n[0],n[1])''')
 
 # Security point
-par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1)
+par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1,marker=0)
 
 par.name = f'moving_front{-nom_dist:.0f}'
 
