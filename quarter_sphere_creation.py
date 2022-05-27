@@ -7,7 +7,7 @@ loudspeaker, see dimensions in par.set_object_lims
 '''
 
 par = Parcours(base='[2]:straight_sol')
-par.set_object_lims([(-183.5,183.5),(-80,80),(0,401)]) # Box
+par.set_object_lims([(-183.5,183.5),(-140,140),(0,401)]) # Box
 
 # Set first point to move robot safely without touching object
 initial_rot = np.array([0,-90,180])
