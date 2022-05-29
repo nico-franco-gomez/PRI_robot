@@ -468,20 +468,24 @@ class Parcours:
         return (np.around(x,3),np.around(y,3),np.around(z,3))
 
     def set_object_lims(self,lims):
-        '''Sets the limits of the object to measure'''
+        '''Sets the limits of the object to measure. Only the negative
+        half of the x-axis is taken into account for the maximum distance, 
+        since no measurements are made behind the object.'''
         assert len(lims)==3,'Object limits must be in x, y and z'
         self.object_lims = []
         self.object_max = 0
-        for i in lims:
+        for ind,i in enumerate(lims):
             assert len(i)==2,'There must be two limits in every direction'
             self.object_lims.append(sorted(i))
-            self.object_max+=(i[0]-i[1])**2
+            if ind==1:
+                self.object_max+=((i[0]-i[1])/2)**2
+            else:
+                self.object_max+=(i[0]-i[1])**2
         self.object_max = self.object_max**0.5
 
     def _check_object_lims(self,coord,security_check=True):
         '''checks if point is within the limits of the object
-        and also if it's nearer than the security distance.
-        sec is the security factor'''
+        and also if it's nearer than the security distance.'''
         cond = []
         for i in range(3):
             cond.append(coord[i]<self.object_lims[i][1] and \

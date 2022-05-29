@@ -18,7 +18,7 @@ if visualize:
 # Create object and set limits
 par = Parcours(base='[2]:straight_sol')
 par.set_trust(True) ## ============= <
-par.set_object_lims([(-183.5,183.5),(-80,80),(0,400)]) # Box
+par.set_object_lims([(-183.5,183.5),(-140,140),(0,400)]) # Box
 point_dist = 40
 
 if visualize:

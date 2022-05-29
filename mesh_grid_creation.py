@@ -8,13 +8,13 @@ loudspeaker, see dimensions in par.set_object_lims
 '''
 
 # Visualization
-visualize = False
+visualize = True
 if visualize:
     fig,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})
 
 # Create object and set limits
 par = Parcours(base='[2]:straight_sol')
-par.set_object_lims([(-183.5,183.5),(-80,80),(0,400)]) # Box
+par.set_object_lims([(-183.5,183.5),(-140,140),(0,400)]) # Box
 point_dist = 50 # mm between measuring points, important for limit frequency
 
 if visualize:
