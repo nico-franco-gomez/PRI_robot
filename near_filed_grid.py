@@ -50,8 +50,8 @@ nom_dist = -50-183.5 # nominal distance for plane location
 rot_frontal = np.array([0,-45,180])
 par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1,marker=0)
 x = nom_dist # Place for the mesh
-yy = np.arange(nom_dist,-nom_dist,point_dist)
-zz = np.arange(0,405,point_dist)
+yy = np.arange(nom_dist,-nom_dist+1,point_dist)
+zz = np.arange(0,405+1,point_dist)
 points = []
 y_pos = True
 for z in zz:
@@ -77,14 +77,14 @@ if visualize:
     ax.scatter(xx,yy,zz,color='xkcd:orange',label='Points \nde mesure')
 
 ## Security points 2
-par.add_point_SLIN([nom_dist,0,800],rot_frontal,1,marker=0)
+par.add_point_SPTP([nom_dist,0,800],rot_frontal,75,marker=0)
 rot_side1 = np.array([45,-45,180])
 par.add_point_SLIN([0,nom_dist,800],rot_side1,1,marker=0)
 
 # One side
-xx = np.arange(0,nom_dist,-point_dist) # Place for the mesh
+xx = np.arange(0,nom_dist-1,-point_dist) # Place for the mesh
 y = nom_dist
-zz = np.arange(0,405,point_dist)
+zz = np.arange(0,405+1,point_dist)
 points = []
 x_pos = True
 for z in zz:
@@ -115,9 +115,9 @@ rot_side2 = np.array([-45,-45,180])
 par.add_point_SLIN([0,-nom_dist,800],rot_side2,1,marker=0)
 
 # Other side
-xx = np.arange(0,nom_dist,-point_dist) # Place for the mesh
+xx = np.arange(0,nom_dist-1,-point_dist) # Place for the mesh
 y = -nom_dist
-zz = np.arange(0,405,point_dist)
+zz = np.arange(0,405+1,point_dist)
 points = []
 x_pos = True
 for z in zz:
@@ -148,8 +148,8 @@ rot_upper = np.array([0,0,180])
 par.add_point_SLIN([0,0,800],rot_upper,1,marker=0)
 
 # Upper plane
-xx = np.arange(0,nom_dist,-point_dist) # Place for the mesh
-yy = np.arange(nom_dist,-nom_dist,point_dist)
+xx = np.arange(0,nom_dist+1,-point_dist) # Place for the mesh
+yy = np.arange(nom_dist,-nom_dist+1,point_dist)
 zz = 405
 points = []
 z_pos = True

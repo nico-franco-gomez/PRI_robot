@@ -55,8 +55,8 @@ distances = np.arange(nom_dist,nom_dist-251,-50)
 
 label = True
 for x in distances:
-    yy = np.arange(-200,200,point_dist)
-    zz = np.arange(0,405,point_dist)
+    yy = np.arange(-200,200+1,point_dist)
+    zz = np.arange(0,405+1,point_dist)
     points = []
     y_pos = True
     if x < -400:

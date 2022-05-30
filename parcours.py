@@ -16,10 +16,10 @@ class Parcours:
     __trust = False # Blocks certain points or movements when False
     object_lims = None
     object_max = None
-    security_factor = 1
+    security_factor = 1.2
     last_point_coord = None # For checking the path between last two points
     _points = [] # Every point's coordinate with [x,y,z,A,B,C]
-    path_control_unit = 'KRC:\R1\Parcours\Nicolas F' # Path where the parcours 
+    path_control_unit = r'KRC:\R1\Parcours\Nicolas F' # Path where the parcours 
     # will be saved in the robot controller
 
     def get_points(self):
@@ -64,7 +64,7 @@ class Parcours:
         '&REL insertPointNumber',
         '&PARAM EDITMASK = *',
         r'&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe',
-        f'&PARAM DISKPATH = {self.path_control_unit}',
+        '&PARAM DISKPATH = '+self.path_control_unit,
         f'DEFDAT {name}',
         r';FOLD EXTERNAL DECLARATIONS;%{PE}%MKUKATPBASIS,%CEXT,%VCOMMON,%P',
         r';FOLD BASISTECH EXT;%{PE}%MKUKATPBASIS,%CEXT,%VEXT,%P',
@@ -81,7 +81,7 @@ class Parcours:
         '&REL insertPointNumber',
         '&PARAM EDITMASK = *',
         r'&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe',
-        f'&PARAM DISKPATH = {self.path_control_unit}',
+        '&PARAM DISKPATH = '+self.path_control_unit,
         f'DEF {name}( )',
         r';FOLD INI;%{PE}',
         '  ;FOLD BASISTECH INI',
@@ -148,6 +148,9 @@ class Parcours:
             if self.last_point_coord is not None and self._check_path(coord):
                 print(f'''Warning! The linear path crosses the object limits.
                 Point no.: {self.__counter_points}''')
+                if not self.__trust:
+                    assert(self._check_path(coord)),\
+                        'Turn trust mode on for defining such paths.'
 
         assert velocity > 0 and velocity <= 100,\
             'Velocity for SPTP cannot be out 0-100%'
@@ -325,6 +328,12 @@ class Parcours:
         if self.object_lims is not None:
             self._check_object_lims(coord)
             self._check_object_lims(coord_mid)
+            if self.last_point_coord is not None and self._check_path(coord):
+                print(f'''Warning! The linear path crosses the object limits.
+                Point no.: {self.__counter_points}''')
+                if not self.__trust:
+                    assert(self._check_path(coord)),\
+                        'Turn trust mode on for defining such paths.'
 
         assert velocity > 0 and velocity <= 2,\
             'Velocity for SLIN cannot be out 0-2 m/s'
@@ -502,11 +511,15 @@ class Parcours:
                     f'''The point is too close to object.
                     Point no.: {self.__counter_points}
                     Min distance: {self.object_max*self.security_factor}
-                    Point distance: {np.dot(coord,coord)**0.5}'''
+                    Point distance: {np.dot(coord,coord)**0.5}
+                    
+                    Turn trust mode on if points near the object are needed.'''
 
     def _check_path(self,coord,accuracy=300):
         '''checks the linear path between the last saved point and a given one.
+
         It will return False for a linear path that crosses the object limits.
+
         Accuracy parameter defines how many discrete points are evaluated 
         in between.'''
         temp = self.last_point_coord

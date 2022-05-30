@@ -37,20 +37,21 @@ if visualize:
 initial_rot = np.array([0,-90,180])
 par.add_point_SPTP([0,0,800],initial_rot,75,marker=0)
 
-r = 600 # Radius of quarter sphere. MAX:600
+r = 600 # Radius of quarter sphere.
 points = []
 
 # Rotation handling – only y-axis (B)
 ## This is defined for Microflown3D and base2: straight_sol !
 deltaB_rot = 90/r
-rotB = lambda x: -90 + x * deltaB_rot
+rotB = lambda x: -90 - x * deltaB_rot
 
 # Second security point
-par.add_point_SLIN([0,r,800],[0,rotB(350),180],2,marker=0)
+par.add_point_SLIN([0,r,800],[0,rotB(-350),180],2,marker=0)
 
 # Define points
 
-theta_vec = np.arange(np.pi/2-0.01,0,-point_dist/r) # Theta for secure trials
+theta_vec = np.arange(np.pi/2-0.01,0,-point_dist/r)
+# theta_vec = np.arange(np.pi/3-0.01,0,-point_dist/r) # Theta for secure trials
 i = 0
 theta_pos = True
 for theta in theta_vec:
