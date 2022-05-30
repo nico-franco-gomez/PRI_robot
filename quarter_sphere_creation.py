@@ -89,6 +89,9 @@ if visualize:
     ax.set_zlabel('$z$ [cm]')
     fig.tight_layout()
     ax.legend(loc='center',bbox_to_anchor=(-0.09,0.5))
-    fig.savefig(f'plots/sphere_r{r//10:.0f}cm.pdf')
+    # fig.savefig(f'plots/sphere_r{r//10:.0f}cm.pdf')
+    # fig.savefig(f'''/Users/nicolas/Documents/Uni/Master – 4. Semester 
+    #  INSA/Projet de recherche/Latex/Bilder/parcours/
+    # sphere_r{r//10:.0f}cm.pdf'''.replace('\n',''))
     plt.show()
 

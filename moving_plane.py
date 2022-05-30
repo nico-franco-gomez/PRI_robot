@@ -101,5 +101,8 @@ if visualize:
     ax.set_zlabel('$z$ [cm]')
     fig.tight_layout()
     ax.legend(loc='center',bbox_to_anchor=(-0.09,0.5))
-    # fig.savefig(f'plots/grid_dist{-nom_dist//10}.pdf')
+    # fig.savefig(f'plots/moving_plane.pdf')
+    # fig.savefig(f'''/Users/nicolas/Documents/Uni/Master – 4. Semester 
+    #  INSA/Projet de recherche/Latex/Bilder/parcours/
+    # moving_plane.pdf'''.replace('\n',''))
     plt.show()
