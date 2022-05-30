@@ -18,17 +18,22 @@ if visualize:
     # Upper
     xx,yy = np.meshgrid(np.arange(par.object_lims[0][0]/10,par.object_lims[0][1]/10,1), # x
                         np.arange(par.object_lims[1][0]/10,par.object_lims[1][1]/10,1)) # y
-    ax.scatter(xx, yy, np.ones_like(xx)*36,color='xkcd:green',label='Haut-parleur')
+    ax.scatter(xx, yy, np.ones_like(xx)*par.object_lims[2][1]/10,
+                color='xkcd:green',label='Haut-parleur')
     # Sides 1
     xx,zz = np.meshgrid(np.arange(par.object_lims[0][0]/10,par.object_lims[0][1]/10,1),
                         np.arange(par.object_lims[2][0]/10,par.object_lims[2][1]/10,1))
-    ax.scatter(xx,np.ones_like(xx)*14,zz,color='xkcd:green')
-    ax.scatter(xx,np.ones_like(xx)*-14,zz,color='xkcd:green')
+    ax.scatter(xx,np.ones_like(xx)*par.object_lims[1][0]/10,
+                zz,color='xkcd:green')
+    ax.scatter(xx,np.ones_like(xx)*par.object_lims[1][1]/10,
+                zz,color='xkcd:green')
     # Sides 2
     yy,zz = np.meshgrid(np.arange(par.object_lims[1][0]/10,par.object_lims[1][1]/10,1),
                         np.arange(par.object_lims[2][0]/10,par.object_lims[2][1]/10,1))
-    ax.scatter(np.ones_like(yy)*18.3,yy,zz,color='xkcd:green')
-    ax.scatter(np.ones_like(yy)*-18.3,yy,zz,color='xkcd:green')
+    ax.scatter(np.ones_like(yy)*par.object_lims[0][0]/10,
+                yy,zz,color='xkcd:green')
+    ax.scatter(np.ones_like(yy)*par.object_lims[0][1]/10,
+                yy,zz,color='xkcd:green')
 
     vec = np.arange(0,30,1)
     ax.scatter(vec,np.zeros_like(vec),np.zeros_like(vec),color='xkcd:purple',\
