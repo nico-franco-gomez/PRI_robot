@@ -480,7 +480,7 @@ class Parcours:
         for ind,i in enumerate(lims):
             assert len(i)==2,'There must be two limits in every direction'
             self.object_lims.append(sorted(i))
-            if ind==1:
+            if ind==1 or ind==2:
                 self.object_max+=((i[0]-i[1])/2)**2
             else:
                 self.object_max+=(i[0]-i[1])**2
