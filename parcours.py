@@ -145,7 +145,7 @@ class Parcours:
 
         if self.object_lims is not None:
             self._check_object_lims(coord)
-            if self.last_point_coord is not None and self._check_path(coord):
+            if self.last_point_coord is not None and not self._check_path(coord):
                 print(f'''Warning! The linear path crosses the object limits.
                 Point no.: {self.__counter_points}''')
                 if not self.__trust:
@@ -328,7 +328,7 @@ class Parcours:
         if self.object_lims is not None:
             self._check_object_lims(coord)
             self._check_object_lims(coord_mid)
-            if self.last_point_coord is not None and self._check_path(coord):
+            if self.last_point_coord is not None and not self._check_path(coord):
                 print(f'''Warning! The linear path crosses the object limits.
                 Point no.: {self.__counter_points}''')
                 if not self.__trust:
