@@ -19,6 +19,8 @@ class Parcours:
     security_factor = 1
     last_point_coord = None # For checking the path between last two points
     _points = [] # Every point's coordinate with [x,y,z,A,B,C]
+    path_control_unit = 'KRC:\R1\Parcours\Nicolas F' # Path where the parcours 
+    # will be saved in the robot controller
 
     def get_points(self):
         return self._points
@@ -62,7 +64,7 @@ class Parcours:
         '&REL insertPointNumber',
         '&PARAM EDITMASK = *',
         r'&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe',
-        r'&PARAM DISKPATH = KRC:\R1\Parcours\Nicolas F',
+        f'&PARAM DISKPATH = {self.path_control_unit}',
         f'DEFDAT {name}',
         r';FOLD EXTERNAL DECLARATIONS;%{PE}%MKUKATPBASIS,%CEXT,%VCOMMON,%P',
         r';FOLD BASISTECH EXT;%{PE}%MKUKATPBASIS,%CEXT,%VEXT,%P',
@@ -79,7 +81,7 @@ class Parcours:
         '&REL insertPointNumber',
         '&PARAM EDITMASK = *',
         r'&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe',
-        r'&PARAM DISKPATH = KRC:\R1\Parcours\Nicolas F',
+        f'&PARAM DISKPATH = {self.path_control_unit}',
         f'DEF {name}( )',
         r';FOLD INI;%{PE}',
         '  ;FOLD BASISTECH INI',
@@ -114,7 +116,8 @@ class Parcours:
         ';ENDFOLD\n']
 
     def __join(self,st:str,curly=True):
-        '''Helper Function to replace curly braces and join all lines'''
+        '''Helper Function to replace curly braces and join all lines in a
+        given string.'''
         if curly:
             st = st.replace('(((','{').replace(')))','}')
         return st.replace('\n','').replace('  ','')
@@ -133,10 +136,10 @@ class Parcours:
         If no dictionary is given, it takes the default values or the last given.'''
 
         if param is not None:
-            assert len(param['t'])==6, \
-                'Turn must be a 6-bit binary'
-            assert len(param['s'])==3, \
-                'Status must be a 3-bit binary'
+            assert len(param['t'])==6 and type(param['t'])==str, \
+                'Turn must be a 6-bit binary saved as str'
+            assert len(param['s'])==3 and type(param['s'])==str, \
+                'Status must be a 3-bit binary saved as str'
             self.turn = int(param['t'],base=2)
             self.status = int(param['s'],base=2)
 
