@@ -12,25 +12,28 @@ for defining the paths is required. Trust mode is on
 
 # Visualization
 visualize = True
-if visualize:
-    fig,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})
 
 # Create object and set limits
 par = Parcours(base='[2]:straight_sol')
 par.set_trust(True) ## ============= <
 par.set_object_lims([(-183.5,183.5),(-140,140),(0,400)]) # Box
-point_dist = 40
+point_dist = 30
+
 
 if visualize:
+    fig,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})
     # Upper
-    xx,yy = np.meshgrid(np.arange(-18.3,18.3,1),np.arange(-14,14,1))
+    xx,yy = np.meshgrid(np.arange(par.object_lims[0][0]/10,par.object_lims[0][1]/10,1), # x
+                        np.arange(par.object_lims[1][0]/10,par.object_lims[1][1]/10,1)) # y
     ax.scatter(xx, yy, np.ones_like(xx)*36,color='xkcd:green',label='Haut-parleur')
     # Sides 1
-    xx,zz = np.meshgrid(np.arange(-18.3,18.3,1),np.arange(0,40,1))
+    xx,zz = np.meshgrid(np.arange(par.object_lims[0][0]/10,par.object_lims[0][1]/10,1),
+                        np.arange(par.object_lims[2][0]/10,par.object_lims[2][1]/10,1))
     ax.scatter(xx,np.ones_like(xx)*14,zz,color='xkcd:green')
     ax.scatter(xx,np.ones_like(xx)*-14,zz,color='xkcd:green')
     # Sides 2
-    yy,zz = np.meshgrid(np.arange(-14,14,1),np.arange(0,40,1))
+    yy,zz = np.meshgrid(np.arange(par.object_lims[1][0]/10,par.object_lims[1][1]/10,1),
+                        np.arange(par.object_lims[2][0]/10,par.object_lims[2][1]/10,1))
     ax.scatter(np.ones_like(yy)*18.3,yy,zz,color='xkcd:green')
     ax.scatter(np.ones_like(yy)*-18.3,yy,zz,color='xkcd:green')
 
@@ -44,14 +47,16 @@ if visualize:
 initial_rot = np.array([0,-90,180])
 par.add_point_SPTP([0,0,800],initial_rot,75,marker=0)
 
-nom_dist = -50-183.5 # nominal distance for plane location
+nom_dist = 40 # nominal distance for plane location (from object boundaries)
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0,-45,180])
-par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1,marker=0)
-x = nom_dist # Place for the mesh
-yy = np.arange(nom_dist,-nom_dist+1,point_dist)
-zz = np.arange(0,405+1,point_dist)
+par.add_point_SLIN([par.object_lims[0][0]-nom_dist*2,0,800],rot_frontal,1,marker=0)
+x = par.object_lims[0][0]-nom_dist # Place for the mesh
+yy = np.arange(par.object_lims[1][0]-nom_dist,
+                par.object_lims[1][1]+nom_dist+1,point_dist)
+zz = np.arange(par.object_lims[2][0],
+                par.object_lims[2][1]+nom_dist+1,point_dist)
 points = []
 y_pos = True
 for z in zz:
@@ -77,14 +82,15 @@ if visualize:
     ax.scatter(xx,yy,zz,color='xkcd:orange',label='Points \nde mesure')
 
 ## Security points 2
-par.add_point_SPTP([nom_dist,0,800],rot_frontal,75,marker=0)
+par.add_point_SPTP([par.object_lims[0][0]-nom_dist*2,0,800],rot_frontal,75,marker=0)
 rot_side1 = np.array([45,-45,180])
-par.add_point_SLIN([0,nom_dist,800],rot_side1,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][0]-nom_dist*2,800],rot_side1,1,marker=0)
 
 # One side
-xx = np.arange(0,nom_dist-1,-point_dist) # Place for the mesh
-y = nom_dist
-zz = np.arange(0,405+1,point_dist)
+xx = np.arange(0,par.object_lims[0][0]-nom_dist-1,-point_dist) # Place for the mesh
+y = par.object_lims[1][0]-nom_dist
+zz = np.arange(par.object_lims[2][0],
+                par.object_lims[2][1]+nom_dist+1,point_dist)
 points = []
 x_pos = True
 for z in zz:
@@ -110,14 +116,15 @@ if visualize:
     ax.scatter(xx,yy,zz,color='xkcd:orange')
 
 ## Security points 3
-par.add_point_SLIN([0,nom_dist,800],initial_rot,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][0]-nom_dist*2,800],initial_rot,1,marker=0)
 rot_side2 = np.array([-45,-45,180])
-par.add_point_SLIN([0,-nom_dist,800],rot_side2,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][1]+nom_dist*2,800],rot_side2,1,marker=0)
 
 # Other side
-xx = np.arange(0,nom_dist-1,-point_dist) # Place for the mesh
-y = -nom_dist
-zz = np.arange(0,405+1,point_dist)
+xx = np.arange(0,par.object_lims[0][0]-nom_dist-1,-point_dist)
+y = par.object_lims[1][1]+nom_dist
+zz = np.arange(par.object_lims[2][0],
+                par.object_lims[2][1]+nom_dist+1,point_dist)
 points = []
 x_pos = True
 for z in zz:
@@ -143,14 +150,15 @@ if visualize:
     ax.scatter(xx,yy,zz,color='xkcd:orange')
 
 ## Security points 3
-par.add_point_SLIN([0,-nom_dist,800],rot_side2,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][1]+nom_dist*2,800],rot_side2,1,marker=0)
 rot_upper = np.array([0,0,180])
 par.add_point_SLIN([0,0,800],rot_upper,1,marker=0)
 
 # Upper plane
-xx = np.arange(0,nom_dist+1,-point_dist) # Place for the mesh
-yy = np.arange(nom_dist,-nom_dist+1,point_dist)
-zz = 405
+xx = np.arange(0,par.object_lims[0][0]-nom_dist-1,-point_dist)
+yy = np.arange(par.object_lims[1][0]-nom_dist,
+                par.object_lims[1][1]+nom_dist+1,point_dist)
+z = par.object_lims[2][1]+nom_dist
 points = []
 z_pos = True
 for y in yy:
@@ -175,13 +183,13 @@ if visualize:
         zz.append(n[0][2]/10)
     ax.scatter(xx,yy,zz,color='xkcd:orange')
 
-par.name = f'near_field{-nom_dist:.0f}'
+par.name = f'near_field{nom_dist:.0f}'
 
 # Export
 par.export(path='real_parcours/')
 
 if visualize:
-    ax.set_title(f'Planes – Distance {-nom_dist//10:.0f} cm')
+    ax.set_title(f'Planes – Distance {nom_dist//10:.0f} cm')
     ax.set_xlabel('$x$ [cm]')
     ax.set_ylabel('$y$ [cm]')
     ax.set_zlabel('$z$ [cm]')

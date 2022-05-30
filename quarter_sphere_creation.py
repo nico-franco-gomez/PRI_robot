@@ -16,14 +16,17 @@ visualize = True
 if visualize:
     fig,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})
     # Upper
-    xx,yy = np.meshgrid(np.arange(-18.3,18.3,1),np.arange(-14,14,1))
-    ax.scatter(xx, yy, np.ones_like(xx)*40,color='xkcd:green',label='Haut-parleur')
+    xx,yy = np.meshgrid(np.arange(par.object_lims[0][0]/10,par.object_lims[0][1]/10,1), # x
+                        np.arange(par.object_lims[1][0]/10,par.object_lims[1][1]/10,1)) # y
+    ax.scatter(xx, yy, np.ones_like(xx)*36,color='xkcd:green',label='Haut-parleur')
     # Sides 1
-    xx,zz = np.meshgrid(np.arange(-18.3,18.3,1),np.arange(0,40,1))
+    xx,zz = np.meshgrid(np.arange(par.object_lims[0][0]/10,par.object_lims[0][1]/10,1),
+                        np.arange(par.object_lims[2][0]/10,par.object_lims[2][1]/10,1))
     ax.scatter(xx,np.ones_like(xx)*14,zz,color='xkcd:green')
     ax.scatter(xx,np.ones_like(xx)*-14,zz,color='xkcd:green')
     # Sides 2
-    yy,zz = np.meshgrid(np.arange(-14,14,1),np.arange(0,40,1))
+    yy,zz = np.meshgrid(np.arange(par.object_lims[1][0]/10,par.object_lims[1][1]/10,1),
+                        np.arange(par.object_lims[2][0]/10,par.object_lims[2][1]/10,1))
     ax.scatter(np.ones_like(yy)*18.3,yy,zz,color='xkcd:green')
     ax.scatter(np.ones_like(yy)*-18.3,yy,zz,color='xkcd:green')
 
