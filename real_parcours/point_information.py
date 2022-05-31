@@ -1,7 +1,7 @@
 from scipy.io import loadmat
 
 # data = loadmat('grid_dist570.mat')
-data = loadmat('near_field40.mat')
+data = loadmat('quarter_sphere_r600.mat')
 
 # Number of points
 n_point = 0
