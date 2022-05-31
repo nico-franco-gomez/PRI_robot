@@ -1,5 +1,5 @@
 import numpy as np
-from parcours_create import Parcours
+from parcours import Parcours
 
 '''
 This parcours is done to define the used base and mark it on the ground.
