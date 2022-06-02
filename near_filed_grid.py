@@ -50,13 +50,13 @@ if visualize:
 
 ## Security points 1
 initial_rot = np.array([0,-90,180])
-par.add_point_SPTP([0,0,800],initial_rot,75,marker=0)
+par.add_point_SPTP([0,0,800],initial_rot,20,marker=0)
 
 nom_dist = 40 # nominal distance for plane location (from object boundaries)
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0,-45,180])
-par.add_point_SLIN([par.object_lims[0][0]-nom_dist*2,0,800],rot_frontal,1,marker=0)
+par.add_point_SLIN([par.object_lims[0][0]-nom_dist*2,0,800],rot_frontal,0.25,marker=0)
 x = par.object_lims[0][0]-nom_dist # Place for the mesh
 yy = np.arange(par.object_lims[1][0]-nom_dist,
                 par.object_lims[1][1]+nom_dist+1,point_dist)
@@ -87,9 +87,9 @@ if visualize:
     ax.scatter(xx,yy,zz,color='xkcd:orange',label='Points \nde mesure')
 
 ## Security points 2
-par.add_point_SPTP([par.object_lims[0][0]-nom_dist*2,0,800],rot_frontal,75,marker=0)
+par.add_point_SPTP([par.object_lims[0][0]-nom_dist*2,0,800],rot_frontal,40,marker=0)
 rot_side1 = np.array([45,-45,180])
-par.add_point_SLIN([0,par.object_lims[1][0]-nom_dist*2,800],rot_side1,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][0]-nom_dist*2,800],rot_side1,0.5,marker=0)
 
 # One side
 xx = np.arange(0,par.object_lims[0][0]-nom_dist-1,-point_dist) # Place for the mesh
@@ -121,9 +121,9 @@ if visualize:
     ax.scatter(xx,yy,zz,color='xkcd:orange')
 
 ## Security points 3
-par.add_point_SLIN([0,par.object_lims[1][0]-nom_dist*2,800],initial_rot,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][0]-nom_dist*2,800],initial_rot,0.5,marker=0)
 rot_side2 = np.array([-45,-45,180])
-par.add_point_SLIN([0,par.object_lims[1][1]+nom_dist*2,800],rot_side2,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][1]+nom_dist*2,800],rot_side2,0.5,marker=0)
 
 # Other side
 xx = np.arange(0,par.object_lims[0][0]-nom_dist-1,-point_dist)
@@ -155,9 +155,9 @@ if visualize:
     ax.scatter(xx,yy,zz,color='xkcd:orange')
 
 ## Security points 3
-par.add_point_SLIN([0,par.object_lims[1][1]+nom_dist*2,800],rot_side2,1,marker=0)
+par.add_point_SLIN([0,par.object_lims[1][1]+nom_dist*2,800],rot_side2,0.5,marker=0)
 rot_upper = np.array([0,0,180])
-par.add_point_SLIN([0,0,800],rot_upper,1,marker=0)
+par.add_point_SLIN([0,0,800],rot_upper,0.5,marker=0)
 
 # Upper plane
 xx = np.arange(0,par.object_lims[0][0]-nom_dist-1,-point_dist)

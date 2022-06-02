@@ -51,7 +51,7 @@ class Parcours:
     def __update_last_point(self,coord):
         self.last_point_coord = coord
 
-    def __init__(self,name=time_string,tool = '[4]:Microflown3D', velocity=100, base='[0]'):
+    def __init__(self,name=time_string,tool = '[4]:Microflown3D', velocity=50, base='[0]'):
         # Initiate .dat and .src files as list of strings
         self.name = name
         self.__counter_points = 1
@@ -122,7 +122,7 @@ class Parcours:
             st = st.replace('(((','{').replace(')))','}')
         return st.replace('\n','').replace('  ','')
 
-    def add_point_SPTP(self,coord,rot,velocity=100,param:dict=None,marker=1):
+    def add_point_SPTP(self,coord,rot,velocity=50,param:dict=None,marker=1):
         '''Adds a new SPTP point to track using coordinates, rotation, velocity
         and, if given, turn and status parameters.
 
@@ -199,7 +199,7 @@ class Parcours:
         IPO_FRAME #BASE,POINT2[] " ")))'''),
         self.__join(f'''DECL PDAT 
         PPDAT{self.__counter_points}=(((VEL {velocity}.000,
-        ACC 100.000,APO_DIST 500.000,
+        ACC {velocity}.000,APO_DIST 500.000,
         APO_MODE #CDIS,GEAR_JERK 100.000,EXAX_IGN 0)))'''),'']
 
         if self.__counter_points == 1 :
@@ -217,7 +217,7 @@ class Parcours:
             Kuka.MovementDataPdat.apo_mode=#CDIS; 
             Kuka.MovementDataPdat.apo_dist=500; 
             Kuka.MovementData.vel={velocity}; 
-            Kuka.MovementData.acc=100; 
+            Kuka.MovementData.acc={velocity}; 
             Kuka.MovementData.exax_ign=0; 
             Kuka.VelocityPtp={velocity}; 
             Kuka.BlendingEnabled=False; 
@@ -231,7 +231,7 @@ class Parcours:
         self._points.append((coord[0],coord[1],coord[2],
                             rot[0],rot[1],rot[2],marker))
 
-    def add_point_SLIN(self,coord,rot,velocity=2,marker=1):
+    def add_point_SLIN(self,coord,rot,velocity=1,marker=1):
         if self.object_lims is not None:
             self._check_object_lims(coord)
             if self.last_point_coord is not None:
@@ -245,6 +245,8 @@ class Parcours:
             'Coordinates must be an array with ordered XYZ-Coordinates'
         assert len(rot)==3,\
             'Rotation must be an array with ABC-Rotations data'
+
+        velocity_rel = int(velocity/2*100)  # Relative velocity
 
         ## SRC file
         newPointSRC = [self.__join(f''';FOLD SLIN P{self.__counter_points} Vel=
@@ -287,8 +289,8 @@ class Parcours:
         =(((TOOL_NO {self.tool_no},BASE_NO {self.base_no}
         ,IPO_FRAME #BASE,POINT2[] " ")))'''),
         self.__join(f'''DECL LDAT LCPDAT{self.__counter_points}=
-        (((VEL {velocity},ACC 100.000,APO_DIST 500.000,APO_FAC 50.0000,
-        AXIS_VEL 100.000,AXIS_ACC 100.000,ORI_TYP #VAR,CIRC_TYP #BASE,
+        (((VEL {velocity},ACC {velocity_rel}.000,APO_DIST 500.000,APO_FAC 50.0000,
+        AXIS_VEL {velocity_rel}.000,AXIS_ACC {velocity_rel}.000,ORI_TYP #VAR,CIRC_TYP #BASE,
         JERK_FAC 50.0000,GEAR_JERK 100.000,
         EXAX_IGN 0)))'''),'']
 
@@ -303,15 +305,15 @@ class Parcours:
              Kuka.FrameData.ipo_frame=#BASE; 
              Kuka.isglobalpoint=False; 
              Kuka.MoveDataName=CPDAT1; 
-             Kuka.MovementData.apo_fac=50; 
+             Kuka.MovementData.apo_fac={velocity_rel}; 
              Kuka.MovementData.apo_dist=500; 
-             Kuka.MovementData.axis_acc=100; 
-             Kuka.MovementData.axis_vel=100; 
+             Kuka.MovementData.axis_acc={velocity_rel}; 
+             Kuka.MovementData.axis_vel={velocity_rel}; 
              Kuka.MovementData.circ_typ=#BASE; 
              Kuka.MovementData.jerk_fac=50; 
              Kuka.MovementData.ori_typ=#VAR; 
              Kuka.MovementData.vel={velocity}; 
-             Kuka.MovementData.acc=100; 
+             Kuka.MovementData.acc={velocity_rel}; 
              Kuka.MovementData.exax_ign=0; 
              Kuka.VelocityPath={velocity}; 
              Kuka.BlendingEnabled=False; 
@@ -324,7 +326,7 @@ class Parcours:
         self._points.append((coord[0],coord[1],coord[2],
                             rot[0],rot[1],rot[2],marker))
 
-    def add_point_SCIRC(self,coord_mid,rot_mid,coord,rot,velocity=2,marker=1):
+    def add_point_SCIRC(self,coord_mid,rot_mid,coord,rot,velocity=1,marker=1):
         if self.object_lims is not None:
             self._check_object_lims(coord)
             self._check_object_lims(coord_mid)
@@ -345,6 +347,8 @@ class Parcours:
             'Rotation must be an array with ABC-Rotations data'
         assert len(rot_mid)==3,\
             'Rotation for middle point must be an array with ABC-Rotations data'
+        
+        velocity_rel = int(velocity/2*100)
 
         ## SRC
         newPointSRC = [self.__join(f''';FOLD SCIRC
@@ -393,8 +397,8 @@ class Parcours:
           FP{self.__counter_points+1}=(((TOOL_NO {self.tool_no},
          BASE_NO {self.base_no},IPO_FRAME #BASE,POINT2[] " ")))'''),
         self.__join(f'''DECL LDAT LCPDAT{self.__counter_points}= ((( VEL {velocity},
-        ACC 100.000,APO_DIST 500.000,APO_FAC 50.0000,AXIS_VEL 100.000,
-        AXIS_ACC 100.000,ORI_TYP #VAR,CIRC_TYP #BASE,JERK_FAC 50.0000,
+        ACC {velocity_rel}.000,APO_DIST 500.000,APO_FAC 50.0000,AXIS_VEL {velocity_rel}.000,
+        AXIS_ACC {velocity_rel}.000,ORI_TYP #VAR,CIRC_TYP #BASE,JERK_FAC 50.0000,
         GEAR_JERK 100.000,EXAX_IGN 0,CB (((AUX_PT (((ORI #CONSIDER,E1 #CONSIDER,
         E2 #CONSIDER,E3 #CONSIDER,E4 #CONSIDER,E5 #CONSIDER,
         E6 #CONSIDER))),TARGET_PT (((ORI #INTERPOLATE,E1 #INTERPOLATE,
@@ -419,13 +423,13 @@ class Parcours:
              E3 #INTERPOLATE,E4 #INTERPOLATE,E5 #INTERPOLATE,E6 #INTERPOLATE))) ))); 
              Kuka.MovementData.apo_fac=50; 
              Kuka.MovementData.apo_dist=500; 
-             Kuka.MovementData.axis_acc=100; 
-             Kuka.MovementData.axis_vel=100; 
+             Kuka.MovementData.axis_acc={velocity_rel}; 
+             Kuka.MovementData.axis_vel={velocity_rel}; 
              Kuka.MovementData.circ_typ=#BASE; 
              Kuka.MovementData.jerk_fac=50; 
              Kuka.MovementData.ori_typ=#VAR; 
              Kuka.MovementData.vel={velocity}; 
-             Kuka.MovementData.acc=100; 
+             Kuka.MovementData.acc={velocity_rel}; 
              Kuka.MovementData.exax_ign=0; 
              Kuka.VelocityPath={velocity}; 
              Kuka.BlendingEnabled=False; 

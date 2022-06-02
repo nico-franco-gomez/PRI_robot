@@ -43,7 +43,7 @@ if visualize:
 
 # Set first point to move robot safely without touching object
 initial_rot = np.array([0,-90,180])
-par.add_point_SPTP([0,0,800],initial_rot,75,marker=0)
+par.add_point_SPTP([0,0,800],initial_rot,25,marker=0)
 
 r = 600 # Radius of quarter sphere.
 points = []
@@ -54,7 +54,7 @@ deltaB_rot = 90/r
 rotB = lambda x: -90 - x * deltaB_rot
 
 # Second security point
-par.add_point_SLIN([0,r,800],[0,rotB(-350),180],2,marker=0)
+par.add_point_SLIN([0,r,800],[0,rotB(-350),180],0.25,marker=0)
 
 # Define points
 

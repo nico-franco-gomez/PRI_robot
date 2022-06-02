@@ -50,13 +50,13 @@ if visualize:
 
 ## Security points 1
 initial_rot = np.array([0,-90,180])
-par.add_point_SPTP([0,0,800],initial_rot,75,marker=0)
+par.add_point_SPTP([0,0,800],initial_rot,20,marker=0)
 
 nom_dist = -40-183.5 # nominal distance for plane location
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0,-45,180])
-par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1,marker=0)
+par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,0.25,marker=0)
 
 distances = np.arange(nom_dist,nom_dist-251,-50)
 
@@ -94,7 +94,7 @@ for x in distances:
             ax.scatter(xx,yy,zz,color='xkcd:orange')
 
 # Security point
-par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,1,marker=0)
+par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,0.25,marker=0)
 
 par.name = f'moving_front{-nom_dist:.0f}'
 
