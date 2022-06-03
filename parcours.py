@@ -2,6 +2,8 @@
 This program creates a track based on vectors for given points for the
 KUKA KR10 R1420.
 
+It uses a saved base in the controller
+
 .dat and .src are the outputs with the given name.
 '''
 import time
