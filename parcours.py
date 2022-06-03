@@ -53,14 +53,23 @@ class Parcours:
     def __update_last_point(self,coord):
         self.last_point_coord = coord
 
-    def __init__(self,name=time_string,tool = '[4]:Microflown3D', velocity=50, base='[0]'):
+    def __init__(self,name=time_string,tool = '[4]:Microflown3D', velocity=50,
+                 base='[0]', base_coord=np.zeros(6)):
         # Initiate .dat and .src files as list of strings
+
+        assert len(base_coord) == 3, 'The base coordinates must be a vector' +\
+                               'with [x, y, z]. Rotations must be expressed' +\
+                               'in the robot`s basis.'
+
         self.name = name
         self.__counter_points = 1
         self.tool = tool
         self.tool_no = int(tool[1])
+
+        # Base handling
         self.base = base
-        self.base_no = int(base[1])
+        self.base_no = int(self.base[1])
+        self.base_coord = base_coord
 
         self.dat_file = ['&ACCESS RVP',
         '&REL insertPointNumber',
@@ -124,7 +133,8 @@ class Parcours:
             st = st.replace('(((','{').replace(')))','}')
         return st.replace('\n','').replace('  ','')
 
-    def add_point_SPTP(self,coord,rot,velocity=50,param:dict=None,marker=1):
+    def add_point_SPTP(self, coord, rot, velocity=50, param:dict=None,
+                       marker=1, coord_trafo=True):
         '''Adds a new SPTP point to track using coordinates, rotation, velocity
         and, if given, turn and status parameters.
 
@@ -136,6 +146,10 @@ class Parcours:
         velocity: (optional) int with velocity in %.
         param: (optional) dictionary with keys 't' for Turn and 's' for Status.
         If no dictionary is given, it takes the default values or the last given.'''
+
+        if coord_trafo:#  Basis change to robot's universal
+            for ind in range(3):
+                coord[ind] += self.base_coord[ind]
 
         if param is not None:
             assert len(param['t'])==6 and type(param['t'])==str, \
@@ -233,7 +247,13 @@ class Parcours:
         self._points.append((coord[0],coord[1],coord[2],
                             rot[0],rot[1],rot[2],marker))
 
-    def add_point_SLIN(self,coord,rot,velocity=1,marker=1):
+    def add_point_SLIN(self, coord, rot, velocity=1, marker=1,
+                       coord_trafo=True):
+
+        if coord_trafo:#  Basis change to robot's universal
+            for ind in range(3):
+                coord[ind] += self.base_coord[ind]
+
         if self.object_lims is not None:
             self._check_object_lims(coord)
             if self.last_point_coord is not None:
@@ -328,7 +348,14 @@ class Parcours:
         self._points.append((coord[0],coord[1],coord[2],
                             rot[0],rot[1],rot[2],marker))
 
-    def add_point_SCIRC(self,coord_mid,rot_mid,coord,rot,velocity=1,marker=1):
+    def add_point_SCIRC(self, coord_mid, rot_mid, coord, rot, velocity=1,
+                        marker=1, coord_trafo=True):
+
+        if coord_trafo:#  Basis change to robot's universal
+            for ind in range(3):
+                coord[ind] += self.base_coord[ind]
+                coord_mid[ind] += self.base_coord[ind]
+
         if self.object_lims is not None:
             self._check_object_lims(coord)
             self._check_object_lims(coord_mid)
@@ -483,13 +510,16 @@ class Parcours:
         x = point[0]*np.cos(point[1])*np.sin(point[2])
         y = point[0]*np.sin(point[1])*np.sin(point[2])
         z = point[0] * np.cos(point[2])
-        return (np.around(x,3),np.around(y,3),np.around(z,3))
+        return [np.around(x,3),np.around(y,3),np.around(z,3)]
 
     def set_object_lims(self,lims):
         '''Sets the limits of the object to measure. Only the negative
         half of the x-axis is taken into account for the maximum distance, 
         since no measurements are made behind the object.'''
         assert len(lims)==3,'Object limits must be in x, y and z'
+        for ind in range(3):
+            lims[ind][0] += self.base_coord[ind]
+            lims[ind][1] += self.base_coord[ind]
         self.object_lims = []
         self.object_max = 0
         for ind,i in enumerate(lims):

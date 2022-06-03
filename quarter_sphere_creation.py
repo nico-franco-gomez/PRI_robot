@@ -7,8 +7,9 @@ This script creates a quarter sphere of measuring points for an exemplary
 loudspeaker, see dimensions in par.set_object_lims
 '''
 
-par = Parcours(base='[2]:straight_sol')
-par.set_object_lims([(-183.5,183.5),(-140,140),(0,401)]) # Box
+base_parcours = [1272, -51, -355]  # [2]:straight_sol
+par = Parcours(base_coord = base_parcours)
+par.set_object_lims([[-183.5,183.5],[-140,140],[0,401]]) # Box
 point_dist = 50
 
 # Visualization

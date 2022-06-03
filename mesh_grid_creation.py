@@ -11,8 +11,9 @@ loudspeaker, see dimensions in par.set_object_lims
 visualize = True
 
 # Create object and set limits
-par = Parcours(base='[2]:straight_sol')
-par.set_object_lims([(-183.5,183.5),(-140,140),(0,400)]) # Box
+base_parcours = [1272, -51, -355]  # [2]:straight_sol
+par = Parcours(base_coord = base_parcours)
+par.set_object_lims([[-183.5,183.5],[-140,140],[0,400]]) # Box
 point_dist = 50 # mm between measuring points, important for limit frequency
 
 if visualize:
@@ -62,10 +63,10 @@ y_pos = True
 for z in zz:
     if y_pos:
         for y in yy:
-            points.append( ( (x,y,z), rot_frontal ,'SLIN') )
+            points.append( ( [x,y,z], rot_frontal ,'SLIN') )
     else:
         for y in np.flip(yy):
-            points.append( ( (x,y,z), rot_frontal ,'SLIN') )
+            points.append( ( [x,y,z], rot_frontal ,'SLIN') )
     y_pos = not y_pos
 # Add points
 for n in points:
@@ -83,6 +84,7 @@ if visualize:
 
 ## Security points 2
 par.add_point_SLIN([nom_dist,0,800],rot_frontal,0.25,marker=0)
+par.add_point_SPTP([0,0,800],initial_rot,20,marker=0)
 par.add_point_SLIN([0,nom_dist,800],initial_rot,0.25,marker=0)
 
 # One side
@@ -94,10 +96,10 @@ x_pos = True
 for z in zz:
     if x_pos:
         for x in xx:
-            points.append( ( (x,y,z), initial_rot ,'SLIN') )
+            points.append( ( [x,y,z], initial_rot ,'SLIN') )
     else:
         for x in np.flip(xx):
-            points.append( ( (x,y,z), initial_rot ,'SLIN') )
+            points.append( ( [x,y,z], initial_rot ,'SLIN') )
     x_pos = not x_pos
 # Add points
 for n in points:
@@ -115,6 +117,7 @@ if visualize:
 
 ## Security points 3
 par.add_point_SLIN([0,nom_dist,800],initial_rot,0.25,marker=0)
+par.add_point_SPTP([0,0,800],initial_rot,20,marker=0)
 par.add_point_SLIN([0,-nom_dist,800],initial_rot,0.25,marker=0)
 
 # Other side
@@ -126,10 +129,10 @@ x_pos = True
 for z in zz:
     if x_pos:
         for x in xx:
-            points.append( ( (x,y,z), initial_rot ,'SLIN') )
+            points.append( ( [x,y,z], initial_rot ,'SLIN') )
     else:
         for x in np.flip(xx):
-            points.append( ( (x,y,z), initial_rot ,'SLIN') )
+            points.append( ( [x,y,z], initial_rot ,'SLIN') )
     x_pos = not x_pos
 # Add points
 for n in points:

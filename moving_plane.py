@@ -15,9 +15,10 @@ for defining the paths is required. Trust mode is on
 visualize = True
 
 # Create object and set limits
-par = Parcours(base='[2]:straight_sol')
+base_parcours = [1272, -51, -355]  # [2]:straight_sol
+par = Parcours(base_coord = base_parcours)
 par.set_trust(True) ## ============= <
-par.set_object_lims([(-183.5,183.5),(-140,140),(0,400)]) # Box
+par.set_object_lims([[-183.5,183.5],[-140,140],[0,400]]) # Box
 point_dist = 40
 
 if visualize:
@@ -71,10 +72,10 @@ for x in distances:
     for z in zz:
         if y_pos:
             for y in yy:
-                points.append( ( (x,y,z), rot_frontal ,'SLIN') )
+                points.append( ( [x,y,z], rot_frontal ,'SLIN') )
         else:
             for y in np.flip(yy):
-                points.append( ( (x,y,z), rot_frontal ,'SLIN') )
+                points.append( ( [x,y,z], rot_frontal ,'SLIN') )
         y_pos = not y_pos
     # Add points
     for n in points:
