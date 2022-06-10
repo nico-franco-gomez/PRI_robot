@@ -19,7 +19,7 @@ par = Parcours(base_coord = base_parcours)
 par.set_trust(True) ## ============= <
 object_lim_base = [[-183.5,183.5],[-140,140],[0,400]]
 par.set_object_lims([[-183.5,183.5],[-140,140],[0,400]]) # Box
-point_dist = 30
+point_dist = 60
 
 
 if visualize:
@@ -54,7 +54,7 @@ if visualize:
 initial_rot = np.array([0, -90, 180])
 par.add_point_SPTP([0, 0, 800], initial_rot, 20, marker=0)
 
-nom_dist = 40 # nominal distance for plane location (from object boundaries)
+nom_dist = 50 # nominal distance for plane location (from object boundaries)
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0, -45, 180])

@@ -1,11 +1,10 @@
+'''
+This script creates walls of measuring points for an exemplary
+loudspeaker, see dimensions in par.set_object_lims
+'''
 import numpy as np
 import matplotlib.pyplot as plt
 from parcours import Parcours
-
-'''
-This script creates a frontal wall of measuring points for an exemplary
-loudspeaker, see dimensions in par.set_object_lims
-'''
 
 # Visualization
 visualize = True
@@ -14,7 +13,7 @@ visualize = True
 base_parcours = [1272, -51, -355]  # [2]:straight_sol
 par = Parcours(base_coord = base_parcours)
 par.set_object_lims([[-183.5,183.5],[-140,140],[0,400]]) # Box
-point_dist = 50 # mm between measuring points, important for limit frequency
+point_dist = 85 # mm between measuring points, important for limit frequency
 
 if visualize:
     fig,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})
@@ -49,7 +48,7 @@ initial_rot = np.array([0,-90,180])
 par.add_point_SPTP([0,0,800],initial_rot,20,marker=0)
 par.add_point_SLIN([-250,0,800],initial_rot,0.25,marker=0)
 
-nom_dist = -570 # nominal distance for plane location
+nom_dist = -600 # nominal distance for plane location
 
 ## Create coordinates
 # Frontal plane
