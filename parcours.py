@@ -54,7 +54,7 @@ class Parcours:
         self.last_point_coord = coord
 
     def __init__(self,name=time_string,tool = '[4]:Microflown3D', velocity=50,
-                 base='[0]', base_coord=np.zeros(6)):
+                 base='[0]', base_coord=np.zeros(3)):
         # Initiate .dat and .src files as list of strings
 
         assert len(base_coord) == 3, 'The base coordinates must be a vector' +\

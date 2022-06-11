@@ -14,8 +14,13 @@ for defining the paths is required. Trust mode is on
 visualize = True
 
 # Create object and set limits
-base_parcours = [1272, -51, -355]  # [2]:straight_sol
-par = Parcours(base_coord = base_parcours)
+# change_base = True
+# base_parcours = [1272, -51, -355]  # [2]:straight_sol
+# par = Parcours(base_coord = base_parcours)
+
+change_base = False
+par = Parcours(base='[2]:straight_sol')
+
 par.set_trust(True) ## ============= <
 object_lim_base = [[-183.5,183.5],[-140,140],[0,400]]
 par.set_object_lims([[-183.5,183.5],[-140,140],[0,400]]) # Box
@@ -52,14 +57,14 @@ if visualize:
 
 ## Security points 1
 initial_rot = np.array([0, -90, 180])
-par.add_point_SPTP([0, 0, 800], initial_rot, 20, marker=0)
+par.add_point_SPTP([0, 0, 800], initial_rot, 20, marker=0, coord_trafo=change_base)
 
 nom_dist = 50 # nominal distance for plane location (from object boundaries)
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0, -45, 180])
 par.add_point_SLIN([object_lim_base[0][0] - nom_dist*2, 0, 800],
-                   rot_frontal, 0.25, marker=0)
+                   rot_frontal, 0.25, marker=0, coord_trafo=change_base)
 x = object_lim_base[0][0] - nom_dist # Place for the mesh
 yy = np.arange(object_lim_base[1][0]-nom_dist,
                 object_lim_base[1][1]+nom_dist+1,point_dist)
@@ -77,7 +82,7 @@ for z in zz:
     y_pos = not y_pos
 # Add points
 for n in points:
-    eval(f'''par.add_point_{n[2]}(n[0], n[1])''')
+    eval(f'''par.add_point_{n[2]}(n[0], n[1], coord_trafo=change_base)''')
 
 if visualize:
     xx = []
@@ -91,10 +96,10 @@ if visualize:
 
 ## Security points 2
 par.add_point_SPTP([object_lim_base[0][0] - nom_dist*2, 0, 800], rot_frontal,
-                   40, marker=0)
+                   40, marker=0, coord_trafo=change_base)
 rot_side1 = np.array([45, -45, 180])
 par.add_point_SLIN([0,object_lim_base[1][0] - nom_dist*2, 800], rot_side1,
-                   0.5, marker=0)
+                   0.5, marker=0, coord_trafo=change_base)
 
 # One side
 xx = np.arange(0, object_lim_base[0][0]-nom_dist-1, -point_dist) # Place for the mesh
@@ -113,7 +118,7 @@ for z in zz:
     x_pos = not x_pos
 # Add points
 for n in points:
-    eval(f'''par.add_point_{n[2]}(n[0], n[1])''')
+    eval(f'''par.add_point_{n[2]}(n[0], n[1], coord_trafo=change_base)''')
 
 if visualize:
     xx = []
@@ -127,10 +132,10 @@ if visualize:
 
 ## Security points 3
 par.add_point_SLIN([0, object_lim_base[1][0] - nom_dist*2, 800], initial_rot,
-                   0.5, marker=0)
+                   0.5, marker=0, coord_trafo=change_base)
 rot_side2 = np.array([-45, -45, 180])
 par.add_point_SLIN([0, object_lim_base[1][1] + nom_dist*2, 800], rot_side2,
-                   0.5, marker=0)
+                   0.5, marker=0, coord_trafo=change_base)
 
 # Other side
 xx = np.arange(0,object_lim_base[0][0]-nom_dist-1,-point_dist)
@@ -149,7 +154,7 @@ for z in zz:
     x_pos = not x_pos
 # Add points
 for n in points:
-    eval(f'''par.add_point_{n[2]}(n[0], n[1])''')
+    eval(f'''par.add_point_{n[2]}(n[0], n[1], coord_trafo=change_base)''')
 
 if visualize:
     xx = []
@@ -163,9 +168,9 @@ if visualize:
 
 ## Security points 3
 par.add_point_SLIN([0, object_lim_base[1][1] + nom_dist*2, 800], rot_side2,
-                   0.5, marker=0)
+                   0.5, marker=0, coord_trafo=change_base)
 rot_upper = np.array([0, 0, 180])
-par.add_point_SLIN([0, 0, 800], rot_upper, 0.5, marker=0)
+par.add_point_SLIN([0, 0, 800], rot_upper, 0.5, marker=0, coord_trafo=change_base)
 
 # Upper plane
 xx = np.arange(0,object_lim_base[0][0]-nom_dist-1,-point_dist)
@@ -184,7 +189,7 @@ for y in yy:
     z_pos = not z_pos
 # Add points
 for n in points:
-    eval(f'''par.add_point_{n[2]}(n[0], n[1])''')
+    eval(f'''par.add_point_{n[2]}(n[0], n[1], coord_trafo=change_base)''')
 
 if visualize:
     xx = []

@@ -19,7 +19,7 @@ base_parcours = [1272, -51, -355]  # [2]:straight_sol
 par = Parcours(base_coord = base_parcours)
 par.set_trust(True) ## ============= <
 par.set_object_lims([[-183.5,183.5],[-140,140],[0,400]]) # Box
-point_dist = 40
+point_dist = 85
 
 if visualize:
     fig,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})
@@ -59,7 +59,7 @@ nom_dist = -40-183.5 # nominal distance for plane location
 rot_frontal = np.array([0,-45,180])
 par.add_point_SLIN([nom_dist-30,0,800],rot_frontal,0.25,marker=0)
 
-distances = np.arange(nom_dist,nom_dist-251,-50)
+distances = np.arange(nom_dist,nom_dist-201,-50)
 
 label = True
 for x in distances:

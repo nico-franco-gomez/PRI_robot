@@ -53,7 +53,7 @@ nom_dist = -600 # nominal distance for plane location
 ## Create coordinates
 # Frontal plane
 rot_frontal = np.array([0,0,180])
-par.add_point_SLIN([-250,0,800],rot_frontal,0.25)
+par.add_point_SLIN([-250,0,800],rot_frontal,0.25, marker=0)
 x = nom_dist # Place for the mesh
 yy = np.arange(nom_dist,-nom_dist-1,point_dist)
 zz = np.arange(0,601,point_dist)
