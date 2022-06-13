@@ -13,7 +13,7 @@ visualize = True
 base_parcours = [1272, -51, -355]  # [2]:straight_sol
 par = Parcours(base_coord = base_parcours)
 par.set_object_lims([[-183.5,183.5],[-140,140],[0,400]]) # Box
-point_dist = 85 # mm between measuring points, important for limit frequency
+point_dist = 50 # mm between measuring points, important for limit frequency
 
 if visualize:
     fig,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})

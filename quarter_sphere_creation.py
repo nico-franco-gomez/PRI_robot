@@ -8,8 +8,8 @@ loudspeaker, see dimensions in par.set_object_lims
 '''
 
 base_parcours = [1272, -51, -355]  # [2]:straight_sol
-par = Parcours(base_coord = base_parcours)
-par.set_object_lims([[-183.5,183.5],[-140,140],[0,401]]) # Box
+par = Parcours(base_coord = base_parcours, base='[2]:straight_sol')
+par.set_object_lims([[-183.5,183.5],[-140,140],[0,401]], coord_trafo=False) # Box
 point_dist = 50
 
 # Visualization
@@ -78,7 +78,7 @@ for theta in theta_vec:
     theta_pos = not theta_pos
 
 for n in points:
-    eval(f'''par.add_point_{n[2]}(n[0],n[1])''')
+    eval(f'''par.add_point_{n[2]}(n[0],n[1], coord_trafo=False)''')
 
 par.name = f'quarter_sphere_r{r}'
 

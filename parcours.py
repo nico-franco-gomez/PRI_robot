@@ -512,14 +512,15 @@ class Parcours:
         z = point[0] * np.cos(point[2])
         return [np.around(x,3),np.around(y,3),np.around(z,3)]
 
-    def set_object_lims(self,lims):
+    def set_object_lims(self,lims, coord_trafo=True):
         '''Sets the limits of the object to measure. Only the negative
         half of the x-axis is taken into account for the maximum distance, 
         since no measurements are made behind the object.'''
         assert len(lims)==3,'Object limits must be in x, y and z'
-        for ind in range(3):
-            lims[ind][0] += self.base_coord[ind]
-            lims[ind][1] += self.base_coord[ind]
+        if coord_trafo:
+            for ind in range(3):
+                lims[ind][0] += self.base_coord[ind]
+                lims[ind][1] += self.base_coord[ind]
         self.object_lims = []
         self.object_max = 0
         for ind,i in enumerate(lims):
